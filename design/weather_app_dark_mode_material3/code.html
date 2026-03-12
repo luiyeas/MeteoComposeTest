@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2b6cee",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<title>Weather Explorer - Random Location</title>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen bg-[#121212]" style="background-color: #121212; min-height: max(884px, 100dvh);">
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="flex items-center p-4 pb-2 justify-between">
+<div class="text-slate-900 dark:text-slate-100 flex size-12 shrink-0 items-center">
+<span class="material-symbols-outlined text-2xl text-white">menu</span>
+</div>
+<h2 class="dark:text-slate-100 text-sm font-medium leading-tight tracking-wide flex-1 text-center uppercase text-white">Weather Explorer</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-xl">location_on</span>
+</button>
+</div>
+</div>
+<!-- Hero Header Section -->
+<header class="flex flex-col items-center justify-center py-8 px-6 text-center">
+<h1 class="dark:text-slate-100 text-4xl font-bold tracking-tight mb-2 text-white">Nuuk, Greenland</h1>
+<div class="flex items-baseline gap-1">
+<span class="text-7xl font-light text-primary">-4°</span>
+<span class="text-2xl font-medium text-slate-500">C</span>
+</div>
+<p class="dark:text-slate-400 font-medium mt-2 text-slate-400">64.1835° N, 51.7216° W</p>
+</header>
+<!-- Main Content: Condition Card -->
+<main class="px-4 flex-1">
+<div class="bg-[#1e1e1e] rounded-xl shadow-2xl p-6 mb-6 border border-white/5">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-primary font-semibold text-lg">Light Snow</span>
+<span class="text-slate-400 text-sm">Feels like -9°C</span>
+</div>
+<div class="bg-primary/20 p-4 rounded-full">
+<span class="material-symbols-outlined text-primary text-5xl" style="font-variation-settings: 'FILL' 1">ac_unit</span>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-white/5">
+<div class="flex justify-between items-center">
+<div class="flex flex-col gap-1">
+<span class="text-xs text-slate-500 uppercase tracking-widest font-bold">Visibility</span>
+<span class="text-lg font-semibold text-white">10.0 km</span>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="flex flex-col gap-1 items-end">
+<span class="text-xs text-slate-500 uppercase tracking-widest font-bold">UV Index</span>
+<span class="text-lg font-semibold text-white">0 Low</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Details Grid -->
+<div class="grid grid-cols-2 gap-4 mb-20"><!-- Humidity -->
+<div class="bg-[#1e1e1e] p-4 rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-primary mb-2">humidity_percentage</span>
+<p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Humidity</p>
+<p class="text-xl font-bold mt-1 text-white">78%</p>
+</div>
+<!-- Wind -->
+<div class="bg-[#1e1e1e] p-4 rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-primary mb-2">air</span>
+<p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Wind Speed</p>
+<p class="text-xl font-bold mt-1 text-white">22 km/h</p>
+</div>
+<!-- Pressure -->
+<div class="bg-[#1e1e1e] p-4 rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-primary mb-2">compress</span>
+<p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Pressure</p>
+<p class="text-xl font-bold mt-1 text-white">1012 hPa</p>
+</div>
+<!-- Cloud Cover -->
+<div class="bg-[#1e1e1e] p-4 rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-primary mb-2">cloud</span>
+<p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Cloud Cover</p>
+<p class="text-xl font-bold mt-1 text-white">92%</p>
+</div></div>
+<!-- Map Placeholder for Location Context -->
+<div class="rounded-xl overflow-hidden h-40 mb-24 relative shadow-inner">
+<div class="absolute inset-0 dark:bg-slate-700 animate-pulse" data-alt="Map showing the location of Nuuk in Greenland" data-location="Nuuk, Greenland" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA_1B_in4UfOvMShoveRMiL_aa8qhZIhzl41NOVDhRXIFC242Cxh0l89KodIoPat3hWZi9uVriIY0O2tMP5K-9r4Sq_YJGsPGAMpzhHfG9EoC6wRguuZIhmtpScmpWXmCJluuQZq3b_b2dhNnapxG1rXqnL0X3D6V_np2hSSPrm5_Eu4ygmqZblhUYrG5GqnmD-OrJcTiLAEoyD9eEu9i2VM7GXPLN_MUwW-rg_oj0cvm-baIkuWPpNUK8m6k7achbzEWOcnA5JkDY'); background-size: cover; background-position: center;">
+</div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary text-white p-2 rounded-full shadow-lg">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed bottom-6 right-6 h-16 w-16 bg-primary text-white rounded-xl shadow-xl flex items-center justify-center hover:scale-105 transition-transform active:scale-95 z-50">
+<span class="material-symbols-outlined text-3xl">refresh</span>
+</button>
+</div>
+</body></html>
