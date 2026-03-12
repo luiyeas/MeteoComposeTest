@@ -45,6 +45,7 @@ class WeatherViewModelTest {
         advanceUntilIdle()
 
         val uiState = viewModel.uiState.value
+        assertFalse(uiState.isInitialLoading)
         assertNotNull(uiState.weather)
         assertEquals("Nuuk, GL", uiState.weather?.title)
         assertEquals(1, repository.requestCount)

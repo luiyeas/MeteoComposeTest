@@ -25,7 +25,7 @@ class WeatherViewModel @Inject constructor(
     private val dispatchers: AppDispatchers,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(WeatherUiState())
+    private val _uiState = MutableStateFlow(WeatherUiState(isInitialLoading = true))
     val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
 
     private var loadJob: Job? = null
@@ -63,7 +63,11 @@ class WeatherViewModel @Inject constructor(
             }
 
             result.onSuccess { weather ->
-                _uiState.value = WeatherUiState(weather = weather)
+                _uiState.value = WeatherUiState(
+                    isInitialLoading = false,
+                    isRefreshing = false,
+                    weather = weather,
+                )
             }.onFailure { throwable ->
                 _uiState.update { currentState ->
                     currentState.copy(
