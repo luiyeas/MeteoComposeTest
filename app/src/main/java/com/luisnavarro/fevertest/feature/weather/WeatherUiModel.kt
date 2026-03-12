@@ -83,9 +83,15 @@ fun CurrentWeatherData.toUiModel(): WeatherUiModel = WeatherUiModel(
 )
 
 private fun CurrentWeatherData.buildLocationTitle(): String {
-    val location = locationName?.takeIf(String::isNotBlank) ?: return "Random location"
     val country = countryCode?.takeIf(String::isNotBlank)
-    return if (country == null) location else "$location, $country"
+    val location = locationName?.takeIf(String::isNotBlank)
+
+    return when {
+        location != null && country != null -> "$location, $country"
+        location != null -> location
+        country != null -> country
+        else -> "Random location"
+    }
 }
 
 private fun CurrentWeatherData.buildLocalTime(): String {
