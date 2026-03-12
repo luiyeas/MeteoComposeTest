@@ -4,14 +4,19 @@ import com.luisnavarro.fevertest.core.model.GeoCoordinates
 import com.luisnavarro.fevertest.data.weather.model.CurrentWeatherData
 import com.luisnavarro.fevertest.data.weather.remote.OpenWeatherApi
 import com.luisnavarro.fevertest.data.weather.remote.model.OpenWeatherResponse
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 import kotlin.math.roundToInt
 
 interface WeatherRepository {
     suspend fun getCurrentWeather(location: GeoCoordinates): CurrentWeatherData
 }
 
-class DefaultWeatherRepository(
+@Singleton
+class DefaultWeatherRepository @Inject constructor(
     private val api: OpenWeatherApi,
+    @param:Named("openWeatherApiKey")
     private val apiKey: String,
 ) : WeatherRepository {
 

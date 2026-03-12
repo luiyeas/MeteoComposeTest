@@ -1,14 +1,14 @@
 package com.luisnavarro.fevertest.feature.weather
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.CreationExtras
 import com.luisnavarro.fevertest.core.dispatchers.AppDispatchers
 import com.luisnavarro.fevertest.data.location.RandomLocationGenerator
 import com.luisnavarro.fevertest.data.weather.WeatherRepository
 import java.io.IOException
 import java.net.UnknownHostException
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
 
-class WeatherViewModel(
+@HiltViewModel
+class WeatherViewModel @Inject constructor(
     private val repository: WeatherRepository,
     private val locationGenerator: RandomLocationGenerator,
     private val dispatchers: AppDispatchers,
@@ -75,29 +76,6 @@ class WeatherViewModel(
         }.also { job ->
             job.invokeOnCompletion { loadJob = null }
         }
-    }
-}
-
-class WeatherViewModelFactory(
-    private val repository: WeatherRepository,
-    private val locationGenerator: RandomLocationGenerator,
-    private val dispatchers: AppDispatchers,
-) : ViewModelProvider.Factory {
-
-    override fun <T : ViewModel> create(
-        modelClass: Class<T>,
-        extras: CreationExtras,
-    ): T {
-        require(modelClass.isAssignableFrom(WeatherViewModel::class.java)) {
-            "Unknown ViewModel class: ${modelClass.name}"
-        }
-
-        @Suppress("UNCHECKED_CAST")
-        return WeatherViewModel(
-            repository = repository,
-            locationGenerator = locationGenerator,
-            dispatchers = dispatchers,
-        ) as T
     }
 }
 

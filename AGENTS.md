@@ -55,9 +55,10 @@ Use these defaults unless the repository or challenge requires a different choic
 - Coroutines + Flow for asynchronous work
 - Repository pattern for data access
 - Retrofit + OkHttp for networking
+- Dagger Hilt for dependency injection
 - Constructor injection everywhere possible
 
-The challenge does not require a specific DI or navigation framework. Use Hilt and Navigation Compose only if they clearly improve the solution without adding avoidable ceremony. For a one-screen assessment, a centralized manual composition root is acceptable if it keeps the app simpler and still testable.
+For this repository, use Hilt as the default dependency injection framework. Keep the setup proportional to the app size, but do not fall back to a custom manual composition root unless the task explicitly requires something Hilt cannot handle cleanly.
 
 ## Architecture Rules
 
@@ -88,6 +89,14 @@ For a very small feature, files can be combined if readability improves and resp
 - Keep mapping explicit and easy to test.
 - Treat random coordinate generation as business logic, not UI logic.
 - The coordinate generator must produce valid latitude and longitude values and should be independently testable.
+
+### Dependency injection
+
+- Use Hilt for dependency injection.
+- Prefer constructor injection for `ViewModel`, repository, and use-case dependencies.
+- Use Hilt modules only for bindings, Retrofit/OkHttp provisioning, dispatchers, API keys, and framework-provided objects.
+- Do not manually instantiate repositories, Retrofit services, or `ViewModel` instances inside activities or composables.
+- In Compose, obtain screen-level `ViewModel` instances with Hilt-aware APIs at the route level only.
 
 ### Performance and scalability
 
