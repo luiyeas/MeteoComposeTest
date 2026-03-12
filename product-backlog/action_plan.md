@@ -82,15 +82,15 @@ This plan is based on `documentation/Instructions.md`, the recruiter notes, and 
 
 ## E1. Foundation
 
-### [ ] US-01 Define the app structure and dependencies
+### [x] US-01 Define the app structure and dependencies
 
 As a developer, I want a simple and testable app structure so implementation stays fast and maintainable.
 
 Done when:
 
-- [ ] package boundaries are clear (`core`, `data`, `feature/weather` or equivalent)
-- [ ] dependencies match the chosen architecture and are justified
-- [ ] secret handling is defined without hardcoding personal credentials
+- [x] package boundaries are clear (`core`, `data`, `feature/weather` or equivalent)
+- [x] dependencies match the chosen architecture and are justified
+- [x] secret handling is defined without hardcoding personal credentials
 
 Implementation notes:
 
@@ -98,134 +98,134 @@ Implementation notes:
 - Prefer constructor injection.
 - Use only the libraries that provide immediate value for this challenge.
 
-### [ ] US-02 Define UI contracts and state model
+### [x] US-02 Define UI contracts and state model
 
 As a developer, I want a predictable screen contract so the UI remains easy to reason about and test.
 
 Done when:
 
-- [ ] the screen has a `UiState`
-- [ ] user interactions are modeled as actions/events
-- [ ] transient messages or retry prompts have a clear delivery mechanism
+- [x] the screen has a `UiState`
+- [x] user interactions are modeled as actions/events
+- [x] transient messages or retry prompts have a clear delivery mechanism
 
 ## E2. Random Weather Data
 
-### [ ] US-03 Generate valid random coordinates
+### [x] US-03 Generate valid random coordinates
 
 As a user, I want the app to use a valid random location so every refresh is meaningful and the request is always valid.
 
 Done when:
 
-- [ ] latitude is always within `[-90, 90]`
-- [ ] longitude is always within `[-180, 180]`
-- [ ] randomness is injectable or otherwise testable
+- [x] latitude is always within `[-90, 90]`
+- [x] longitude is always within `[-180, 180]`
+- [x] randomness is injectable or otherwise testable
 
-### [ ] US-04 Fetch current weather for a random location
+### [x] US-04 Fetch current weather for a random location
 
 As a user, I want the app to automatically load current weather so I get useful content without extra steps.
 
 Done when:
 
-- [ ] the app fetches weather on first launch
-- [ ] the request uses latitude and longitude against the current weather endpoint
-- [ ] the request uses metric units
-- [ ] transport models are mapped before they reach the UI
+- [x] the app fetches weather on first launch
+- [x] the request uses latitude and longitude against the current weather endpoint
+- [x] the request uses metric units
+- [x] transport models are mapped before they reach the UI
 
-### [ ] US-05 Map API data into a UI-ready weather model
+### [x] US-05 Map API data into a UI-ready weather model
 
 As a developer, I want a UI-focused model so formatting and fallback logic stay outside composables.
 
 Done when:
 
-- [ ] the mapped model contains all fields needed by the screen
-- [ ] coordinates are formatted consistently
-- [ ] wind speed is converted to km/h
-- [ ] missing city names or optional API fields are handled gracefully
+- [x] the mapped model contains all fields needed by the screen
+- [x] coordinates are formatted consistently
+- [x] wind speed is converted to km/h
+- [x] missing city names or optional API fields are handled gracefully
 
 ## E3. Screen UI
 
-### [ ] US-06 Build the main weather screen
+### [x] US-06 Build the main weather screen
 
 As a user, I want to see the weather in a clear and attractive layout so the information is easy to scan.
 
 Done when:
 
-- [ ] the screen includes app bar, hero header, summary card, metrics grid, lower context card, and refresh FAB
-- [ ] the design follows the provided mock direction without unnecessary flourishes
-- [ ] the layout works on typical phone sizes without clipping
+- [x] the screen includes app bar, hero header, summary card, metrics grid, lower context card, and refresh FAB
+- [x] the design follows the provided mock direction without unnecessary flourishes
+- [x] the layout works on typical phone sizes without clipping
 
-### [ ] US-07 Support light and dark mode
+### [x] US-07 Support light and dark mode
 
 As a user, I want the screen to look correct in light and dark themes so the app feels production-ready.
 
 Done when:
 
-- [ ] both themes are implemented
-- [ ] colors, surfaces, and text contrast remain readable
-- [ ] the app follows system theme or another clearly documented rule
+- [x] both themes are implemented
+- [x] colors, surfaces, and text contrast remain readable
+- [x] the app follows system theme or another clearly documented rule
 
-### [ ] US-08 Define the lower context card
+### [x] US-08 Define the lower context card
 
 As a user, I want visual location context so the bottom section of the design feels intentional.
 
 Done when:
 
-- [ ] the section exists and fits the design hierarchy
-- [ ] the card is visual only and does not add navigation or gestures in v1
-- [ ] the implementation does not introduce unnecessary mapping SDK complexity
-- [ ] the chosen approach is documented if it differs from a real map
+- [x] the section exists and fits the design hierarchy
+- [x] the card is visual only and does not add navigation or gestures in v1
+- [x] the implementation does not introduce unnecessary mapping SDK complexity
+- [x] the chosen approach is documented if it differs from a real map
 
 ## E4. States and Resilience
 
-### [ ] US-09 Handle loading and refresh states
+### [x] US-09 Handle loading and refresh states
 
 As a user, I want feedback during network activity so I understand when the app is working.
 
 Done when:
 
-- [ ] initial loading is visible
-- [ ] refresh loading does not cause jarring UI flicker
-- [ ] repeated taps do not trigger overlapping requests
+- [x] initial loading is visible
+- [x] refresh loading does not cause jarring UI flicker
+- [x] repeated taps do not trigger overlapping requests
 
-### [ ] US-10 Handle recoverable failures
+### [x] US-10 Handle recoverable failures
 
 As a user, I want clear feedback and retry options when the request fails so the app remains usable.
 
 Done when:
 
-- [ ] failures are surfaced with a clear message
-- [ ] retry is available
-- [ ] previous successful content is preserved when appropriate
+- [x] failures are surfaced with a clear message
+- [x] retry is available
+- [x] previous successful content is preserved when appropriate
 
 ## E5. Testing and Quality
 
-### [ ] US-11 Add unit tests for critical logic
+### [x] US-11 Add unit tests for critical logic
 
 As a reviewer, I need evidence that the important logic is correct and stable.
 
 Done when:
 
-- [ ] coordinate generation is tested
-- [ ] ViewModel success, loading, refresh, and error paths are tested
-- [ ] mapper logic is tested when non-trivial
-- [ ] repository behavior is tested if it contains real coordination or translation logic
+- [x] coordinate generation is tested
+- [x] ViewModel success, loading, refresh, and error paths are tested
+- [x] mapper logic is tested when non-trivial
+- [x] repository behavior is tested if it contains real coordination or translation logic
 
-### [ ] US-12 Run validation commands before marking work complete
+### [x] US-12 Run validation commands before marking work complete
 
 As a reviewer, I want relevant checks to pass so the submission is credible.
 
 Done when:
 
-- [ ] relevant unit tests were run
-- [ ] lint was run if configured for the changed area
-- [ ] the debug build assembles successfully
-- [ ] any skipped validation is explicitly documented
+- [x] relevant unit tests were run
+- [x] lint was run if configured for the changed area
+- [x] the debug build assembles successfully
+- [x] any skipped validation is explicitly documented
 
 Suggested commands:
 
-- [ ] `./gradlew app:testDebugUnitTest`
-- [ ] `./gradlew app:lintDebug`
-- [ ] `./gradlew app:assembleDebug`
+- [x] `./gradlew app:testDebugUnitTest`
+- [x] `./gradlew app:lintDebug`
+- [x] `./gradlew app:assembleDebug`
 - [ ] `./gradlew app:connectedDebugAndroidTest` when UI/device coverage is added
 
 ## E6. Submission Readiness
