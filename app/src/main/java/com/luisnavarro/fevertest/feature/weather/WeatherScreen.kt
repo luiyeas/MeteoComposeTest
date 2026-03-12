@@ -2,6 +2,8 @@ package com.luisnavarro.fevertest.feature.weather
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,17 +47,32 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.android.gms.maps.GoogleMapOptions
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.luisnavarro.fevertest.BuildConfig
+import com.luisnavarro.fevertest.core.model.GeoCoordinates
 import com.luisnavarro.fevertest.ui.theme.FeverTestTheme
 
 @Composable
@@ -182,6 +199,7 @@ private fun WeatherContent(
         StatGrid(stats = weather.stats)
         Spacer(modifier = Modifier.height(24.dp))
         LocationContextCard(
+            mapCoordinates = weather.mapCoordinates,
             coordinates = weather.coordinates,
             title = weather.title,
         )
@@ -410,29 +428,23 @@ private fun StatCard(
 
 @Composable
 private fun LocationContextCard(
+    mapCoordinates: GeoCoordinates,
     coordinates: String,
     title: String,
 ) {
-    val backgroundBrush = Brush.linearGradient(
-        colors = listOf(
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.28f),
-            MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
-            MaterialTheme.colorScheme.surface,
-        ),
-    )
-
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
             .clip(RoundedCornerShape(28.dp))
-            .background(backgroundBrush)
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.outline.copy(alpha = 0.35f),
                 shape = RoundedCornerShape(28.dp),
             ),
     ) {
+        LocationMapBackground(coordinates = mapCoordinates)
+
         Text(
             text = coordinates,
             modifier = Modifier
@@ -469,6 +481,85 @@ private fun LocationContextCard(
             }
         }
     }
+}
+
+@Composable
+private fun LocationMapBackground(coordinates: GeoCoordinates) {
+    val isPreview = LocalInspectionMode.current
+    val hasMapsApiKey = BuildConfig.MAPS_API_KEY.isNotBlank()
+
+    if (isPreview || !hasMapsApiKey) {
+        LocationMapPlaceholder()
+        return
+    }
+
+    val location = LatLng(coordinates.latitude, coordinates.longitude)
+    key(location.latitude, location.longitude) {
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(location, 4f)
+        }
+        var isMapLoaded by remember { mutableStateOf(false) }
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            GoogleMap(
+                modifier = Modifier.fillMaxSize(),
+                cameraPositionState = cameraPositionState,
+                uiSettings = MapUiSettings(
+                    compassEnabled = false,
+                    indoorLevelPickerEnabled = false,
+                    mapToolbarEnabled = false,
+                    myLocationButtonEnabled = false,
+                    rotationGesturesEnabled = false,
+                    scrollGesturesEnabled = false,
+                    scrollGesturesEnabledDuringRotateOrZoom = false,
+                    tiltGesturesEnabled = false,
+                    zoomControlsEnabled = false,
+                    zoomGesturesEnabled = false,
+                ),
+                properties = MapProperties(
+                    isBuildingEnabled = false,
+                    isIndoorEnabled = false,
+                ),
+                googleMapOptionsFactory = {
+                    GoogleMapOptions()
+                        .liteMode(true)
+                        .mapToolbarEnabled(false)
+                },
+                onMapLoaded = { isMapLoaded = true },
+            )
+
+            if (!isMapLoaded) {
+                LocationMapPlaceholder()
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {},
+                    )
+            )
+        }
+    }
+}
+
+@Composable
+private fun LocationMapPlaceholder() {
+    val backgroundBrush = Brush.linearGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.28f),
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.12f),
+            MaterialTheme.colorScheme.surface,
+        ),
+    )
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundBrush)
+    )
 }
 
 @Composable
@@ -605,6 +696,7 @@ private fun WeatherScreenPreview() {
                 weather = WeatherUiModel(
                     title = "Nuuk, GL",
                     coordinates = "64.1835° N, 51.7216° W",
+                    mapCoordinates = GeoCoordinates(64.1835, -51.7216),
                     temperature = "-4°",
                     unitLabel = "C",
                     condition = "Light Snow",

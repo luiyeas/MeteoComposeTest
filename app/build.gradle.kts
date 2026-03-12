@@ -21,6 +21,11 @@ val openWeatherApiKey = providers.gradleProperty("OPEN_WEATHER_API_KEY").orNull
     ?: System.getenv("OPEN_WEATHER_API_KEY")
     ?: "ae103060692fe13422deb98285505dc6"
 
+val mapsApiKey = providers.gradleProperty("MAPS_API_KEY").orNull
+    ?: localProperties.getProperty("MAPS_API_KEY")
+    ?: System.getenv("MAPS_API_KEY")
+    ?: ""
+
 android {
     namespace = "com.luisnavarro.fevertest"
     compileSdk {
@@ -38,6 +43,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "OPEN_WEATHER_API_KEY", "\"$openWeatherApiKey\"")
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildTypes {
@@ -83,6 +90,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.hilt.android)
+    implementation(libs.google.maps.compose)
     kapt(libs.hilt.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

@@ -12,6 +12,7 @@ import kotlin.math.roundToInt
 data class WeatherUiModel(
     val title: String,
     val coordinates: String,
+    val mapCoordinates: GeoCoordinates,
     val temperature: String,
     val unitLabel: String,
     val condition: String,
@@ -51,6 +52,7 @@ private val timeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("HH:m
 fun CurrentWeatherData.toUiModel(): WeatherUiModel = WeatherUiModel(
     title = buildLocationTitle(),
     coordinates = coordinates.toDisplayString(),
+    mapCoordinates = coordinates,
     temperature = temperatureCelsius.toTemperatureValue(),
     unitLabel = "C",
     condition = conditionDescription.toDisplayCondition(),
