@@ -132,6 +132,9 @@ OPEN_WEATHER_API_KEY=your_openweather_key
 MAPS_API_KEY=your_google_maps_key
 ```
 
+> [!WARNING]
+> Solo para facilitar la revisión de la prueba, puedes añadir `OPEN_WEATHER_API_KEY=ae103060692fe13422deb98285505dc6` en `local.properties` para compilar y ejecutar la app. Esta clave se incluye exclusivamente para este challenge. En un entorno de producción, las credenciales no deberían distribuirse ni documentarse de esta forma.
+
 Notas de configuración:
 
 - `OPEN_WEATHER_API_KEY` es obligatoria y la build falla de forma explícita si no está configurada.
