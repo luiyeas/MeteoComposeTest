@@ -2,7 +2,28 @@
 
 # FeverWeather
 
-Android take-home solution for a single-screen weather app that fetches the current weather for a valid random location and lets the user refresh the experience on demand.
+Proposed solution for the Android Developer technical assessment at Fever.
+
+## Table of Contents
+
+- [Challenge](#challenge)
+- [Quick Access](#quick-access)
+- [Overview](#overview)
+- [Screenshots](#screenshots)
+- [APK](#apk)
+- [Technical Stack](#technical-stack)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Setup / Configuration](#setup--configuration)
+- [Build and Run](#build-and-run)
+- [Testing](#testing)
+- [Technical Decisions / Trade-offs](#technical-decisions--trade-offs)
+- [Future Improvements](#future-improvements)
+- [AI Usage](#ai-usage)
+
+## Challenge
+
+Build a single-screen Android app that generates a valid random latitude and longitude, fetches the current weather for that location using OpenWeather, displays the weather together with the location context, and allows the user to refresh the content to start again with a new random location.
 
 ## Quick Access
 
@@ -14,7 +35,7 @@ Android take-home solution for a single-screen weather app that fetches the curr
 
 ## Overview
 
-The challenge asks for a one-screen app that:
+The challenge asks for a single-screen app that:
 
 - generates valid random latitude and longitude values
 - fetches weather for that location from OpenWeather
@@ -65,7 +86,7 @@ This path is useful for reviewers because the repository does not include the Go
 
 ## Architecture
 
-The app stays single-module on purpose to keep the solution proportional to the challenge, while still following production-style layering and separation of responsibilities.
+The app stays single-module on purpose to keep the solution proportional to the challenge while still following production-style layering and separation of responsibilities.
 
 ```text
 UI -> ViewModel -> Repository -> OpenWeather API
