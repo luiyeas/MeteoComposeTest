@@ -59,6 +59,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -73,6 +74,7 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.luisnavarro.fevertest.BuildConfig
+import com.luisnavarro.fevertest.R
 import com.luisnavarro.fevertest.core.model.GeoCoordinates
 import com.luisnavarro.fevertest.core.testing.TestRuntime
 import com.luisnavarro.fevertest.ui.theme.FeverTestTheme
@@ -163,7 +165,7 @@ private fun WeatherTopBar(modifier: Modifier = Modifier) {
         }
 
         Text(
-            text = "WEATHER EXPLORER",
+            text = stringResource(R.string.weather_top_bar_title),
             style = MaterialTheme.typography.labelLarge.copy(
                 fontWeight = FontWeight.SemiBold,
                 letterSpacing = 1.2.sp,
@@ -229,7 +231,7 @@ private fun WeatherContent(
                 horizontalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    text = "Refreshing random weather...",
+                    text = stringResource(R.string.weather_refreshing),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
@@ -343,7 +345,7 @@ private fun SummaryCard(weather: WeatherUiModel) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 SummaryMetric(
-                    label = "Visibility",
+                    label = stringResource(R.string.weather_summary_visibility),
                     value = weather.visibility,
                     modifier = Modifier.weight(1f),
                 )
@@ -355,7 +357,7 @@ private fun SummaryCard(weather: WeatherUiModel) {
                         .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.4f)),
                 )
                 SummaryMetric(
-                    label = "Local time",
+                    label = stringResource(R.string.weather_summary_local_time),
                     value = weather.localTime,
                     modifier = Modifier.weight(1f),
                     alignEnd = true,
@@ -622,13 +624,13 @@ private fun LoadingContent(modifier: Modifier = Modifier) {
         CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Finding a random location",
+            text = stringResource(R.string.weather_loading_title),
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
             textAlign = TextAlign.Center,
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Fetching current weather and building the first screen.",
+            text = stringResource(R.string.weather_loading_message),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
@@ -651,7 +653,7 @@ private fun BlockingErrorContent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Weather unavailable",
+            text = stringResource(R.string.weather_error_title),
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
             textAlign = TextAlign.Center,
         )
@@ -667,7 +669,7 @@ private fun BlockingErrorContent(
             onClick = onRetry,
             colors = ButtonDefaults.buttonColors(),
         ) {
-            Text(text = "Try again")
+            Text(text = stringResource(R.string.weather_retry))
         }
     }
 }
@@ -696,7 +698,7 @@ private fun RefreshActionButton(
         } else {
             Icon(
                 imageVector = Icons.Rounded.Refresh,
-                contentDescription = "Refresh weather",
+                contentDescription = stringResource(R.string.weather_refresh_content_description),
                 modifier = Modifier.size(28.dp),
             )
         }

@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">Weather Explorer</string>
+    <string name="app_name">FeverWeather</string>
+    <string name="weather_top_bar_title">FeverWeather</string>
+    <string name="weather_refreshing">Refreshing random weather...</string>
+    <string name="weather_summary_visibility">Visibility</string>
+    <string name="weather_summary_local_time">Local time</string>
+    <string name="weather_loading_title">Finding a random location</string>
+    <string name="weather_loading_message">Fetching current weather and building the first screen.</string>
+    <string name="weather_error_title">Weather unavailable</string>
+    <string name="weather_retry">Try again</string>
+    <string name="weather_refresh_content_description">Refresh weather</string>
 </resources>
