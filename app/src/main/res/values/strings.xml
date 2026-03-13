@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FeverWeather</string>
     <string name="weather_top_bar_title">FeverWeather</string>
-    <string name="weather_refreshing">Refreshing random weather...</string>
+    <string name="weather_refreshing">Refreshing random weather…</string>
     <string name="weather_summary_visibility">Visibility</string>
     <string name="weather_summary_local_time">Local time</string>
     <string name="weather_loading_title">Finding a random location</string>
