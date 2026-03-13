@@ -13,6 +13,10 @@ interface WeatherRepository {
     suspend fun getCurrentWeather(location: GeoCoordinates): CurrentWeatherData
 }
 
+internal class MalformedWeatherPayloadException(
+    message: String,
+) : IllegalStateException(message)
+
 @Singleton
 class DefaultWeatherRepository @Inject constructor(
     private val api: OpenWeatherApi,
@@ -34,7 +38,9 @@ internal fun OpenWeatherResponse.toCurrentWeatherData(
     fallbackCoordinates: GeoCoordinates,
 ): CurrentWeatherData {
     val primaryWeather = weather.firstOrNull()
-        ?: error("Weather condition unavailable for the selected location.")
+        ?: throw MalformedWeatherPayloadException(
+            "Weather condition unavailable for the selected location."
+        )
 
     return CurrentWeatherData(
         coordinates = GeoCoordinates(

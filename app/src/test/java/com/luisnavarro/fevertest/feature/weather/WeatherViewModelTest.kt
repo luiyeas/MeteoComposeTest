@@ -7,9 +7,11 @@ import com.luisnavarro.fevertest.data.weather.WeatherRepository
 import com.luisnavarro.fevertest.data.weather.model.CurrentWeatherData
 import com.luisnavarro.fevertest.testing.MainDispatcherRule
 import java.io.IOException
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -146,6 +148,36 @@ class WeatherViewModelTest {
         assertFalse(uiState.showBlockingError)
     }
 
+    @Test
+    fun `refresh is ignored while another load is already active`() = runTest {
+        val responseGate = CompletableDeferred<Unit>()
+        val repository = BlockingWeatherRepository(
+            result = sampleWeatherData(locationName = "Nuuk"),
+            gate = responseGate,
+        )
+        val generator = FakeLocationGenerator(
+            coordinates = ArrayDeque(
+                listOf(
+                    GeoCoordinates(64.1835, -51.7216),
+                    GeoCoordinates(64.1466, -21.9426),
+                )
+            )
+        )
+
+        val viewModel = WeatherViewModel(repository, generator, dispatchers)
+
+        runCurrent()
+        viewModel.onAction(WeatherUiAction.RefreshClicked)
+
+        assertEquals(1, repository.requestCount)
+
+        responseGate.complete(Unit)
+        advanceUntilIdle()
+
+        assertEquals(1, repository.requestCount)
+        assertEquals("Nuuk, GL", viewModel.uiState.value.weather?.title)
+    }
+
     private class TestAppDispatchers(
         override val io: CoroutineDispatcher,
     ) : AppDispatchers
@@ -165,6 +197,20 @@ class WeatherViewModelTest {
         override suspend fun getCurrentWeather(location: GeoCoordinates): CurrentWeatherData {
             requestCount += 1
             return results.removeFirst().getOrThrow()
+        }
+    }
+
+    private class BlockingWeatherRepository(
+        private val result: CurrentWeatherData,
+        private val gate: CompletableDeferred<Unit>,
+    ) : WeatherRepository {
+        var requestCount: Int = 0
+            private set
+
+        override suspend fun getCurrentWeather(location: GeoCoordinates): CurrentWeatherData {
+            requestCount += 1
+            gate.await()
+            return result
         }
     }
 }

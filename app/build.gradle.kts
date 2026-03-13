@@ -1,4 +1,5 @@
 import java.util.Properties
+import org.gradle.api.GradleException
 
 plugins {
     alias(libs.plugins.android.application)
@@ -19,7 +20,10 @@ val localProperties = Properties().apply {
 val openWeatherApiKey = providers.gradleProperty("OPEN_WEATHER_API_KEY").orNull
     ?: localProperties.getProperty("OPEN_WEATHER_API_KEY")
     ?: System.getenv("OPEN_WEATHER_API_KEY")
-    ?: "ae103060692fe13422deb98285505dc6"
+    ?: throw GradleException(
+        "OPEN_WEATHER_API_KEY is required. Define it in local.properties, " +
+            "~/.gradle/gradle.properties, or the environment."
+    )
 
 val mapsApiKey = providers.gradleProperty("MAPS_API_KEY").orNull
     ?: localProperties.getProperty("MAPS_API_KEY")
