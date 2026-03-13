@@ -59,6 +59,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -73,12 +74,25 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.luisnavarro.fevertest.BuildConfig
 import com.luisnavarro.fevertest.core.model.GeoCoordinates
+import com.luisnavarro.fevertest.core.testing.TestRuntime
 import com.luisnavarro.fevertest.ui.theme.FeverTestTheme
+
+object WeatherScreenTestTags {
+    const val BlockingError = "blocking_error"
+    const val InlineErrorBanner = "inline_error_banner"
+    const val LoadingState = "loading_state"
+    const val LocationCard = "location_card"
+    const val LocationMapPlaceholder = "location_map_placeholder"
+    const val LocationTitle = "location_title"
+    const val RefreshFab = "refresh_fab"
+    const val WeatherContent = "weather_content"
+}
 
 @Composable
 fun WeatherScreen(
     uiState: WeatherUiState,
     onAction: (WeatherUiAction) -> Unit,
+    showLocationMap: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -121,6 +135,7 @@ fun WeatherScreen(
                     weather = uiState.weather,
                     isRefreshing = uiState.isRefreshing,
                     errorMessage = uiState.errorMessage,
+                    showLocationMap = showLocationMap,
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -178,10 +193,12 @@ private fun WeatherContent(
     weather: WeatherUiModel,
     isRefreshing: Boolean,
     errorMessage: String?,
+    showLocationMap: Boolean,
     modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
+            .testTag(WeatherScreenTestTags.WeatherContent)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp),
@@ -202,6 +219,7 @@ private fun WeatherContent(
             mapCoordinates = weather.mapCoordinates,
             coordinates = weather.coordinates,
             title = weather.title,
+            showLocationMap = showLocationMap,
         )
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -234,6 +252,7 @@ private fun HeaderSection(weather: WeatherUiModel) {
     ) {
         Text(
             text = weather.title,
+            modifier = Modifier.testTag(WeatherScreenTestTags.LocationTitle),
             style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold),
             textAlign = TextAlign.Center,
         )
@@ -431,9 +450,11 @@ private fun LocationContextCard(
     mapCoordinates: GeoCoordinates,
     coordinates: String,
     title: String,
+    showLocationMap: Boolean,
 ) {
     Box(
         modifier = Modifier
+            .testTag(WeatherScreenTestTags.LocationCard)
             .fillMaxWidth()
             .height(160.dp)
             .clip(RoundedCornerShape(28.dp))
@@ -443,7 +464,10 @@ private fun LocationContextCard(
                 shape = RoundedCornerShape(28.dp),
             ),
     ) {
-        LocationMapBackground(coordinates = mapCoordinates)
+        LocationMapBackground(
+            coordinates = mapCoordinates,
+            showLocationMap = showLocationMap,
+        )
 
         Text(
             text = coordinates,
@@ -484,11 +508,15 @@ private fun LocationContextCard(
 }
 
 @Composable
-private fun LocationMapBackground(coordinates: GeoCoordinates) {
+private fun LocationMapBackground(
+    coordinates: GeoCoordinates,
+    showLocationMap: Boolean,
+) {
     val isPreview = LocalInspectionMode.current
     val hasMapsApiKey = BuildConfig.MAPS_API_KEY.isNotBlank()
+    val shouldRenderLiveMap = showLocationMap && !TestRuntime.isUiTestMode && !isPreview && hasMapsApiKey
 
-    if (isPreview || !hasMapsApiKey) {
+    if (!shouldRenderLiveMap) {
         LocationMapPlaceholder()
         return
     }
@@ -557,6 +585,7 @@ private fun LocationMapPlaceholder() {
 
     Box(
         modifier = Modifier
+            .testTag(WeatherScreenTestTags.LocationMapPlaceholder)
             .fillMaxSize()
             .background(backgroundBrush)
     )
@@ -565,7 +594,9 @@ private fun LocationMapPlaceholder() {
 @Composable
 private fun InlineErrorBanner(message: String) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .testTag(WeatherScreenTestTags.InlineErrorBanner),
         shape = RoundedCornerShape(20.dp),
         color = MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
     ) {
@@ -582,6 +613,7 @@ private fun InlineErrorBanner(message: String) {
 private fun LoadingContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
+            .testTag(WeatherScreenTestTags.LoadingState)
             .fillMaxSize()
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
@@ -612,6 +644,7 @@ private fun BlockingErrorContent(
 ) {
     Column(
         modifier = modifier
+            .testTag(WeatherScreenTestTags.BlockingError)
             .fillMaxSize()
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.Center,
@@ -647,6 +680,7 @@ private fun RefreshActionButton(
     FloatingActionButton(
         onClick = onClick,
         modifier = Modifier
+            .testTag(WeatherScreenTestTags.RefreshFab)
             .size(68.dp)
             .navigationBarsPadding(),
         shape = RoundedCornerShape(22.dp),
