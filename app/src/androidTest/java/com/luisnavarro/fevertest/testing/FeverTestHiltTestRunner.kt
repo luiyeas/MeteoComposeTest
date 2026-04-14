@@ -3,7 +3,6 @@ package com.luisnavarro.fevertest.testing
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
-import com.luisnavarro.fevertest.core.testing.TestRuntime
 import dagger.hilt.android.testing.HiltTestApplication
 
 class FeverTestHiltTestRunner : AndroidJUnitRunner() {
@@ -12,7 +11,6 @@ class FeverTestHiltTestRunner : AndroidJUnitRunner() {
         className: String,
         context: Context,
     ): Application {
-        System.setProperty(TestRuntime.UiTestModeProperty, "true")
         return super.newApplication(
             classLoader,
             HiltTestApplication::class.java.name,

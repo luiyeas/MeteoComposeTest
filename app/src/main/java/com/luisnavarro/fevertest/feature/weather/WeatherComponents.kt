@@ -74,7 +74,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.luisnavarro.fevertest.BuildConfig
 import com.luisnavarro.fevertest.R
 import com.luisnavarro.fevertest.core.model.GeoCoordinates
-import com.luisnavarro.fevertest.core.testing.TestRuntime
 
 @Composable
 internal fun WeatherTopBar(modifier: Modifier = Modifier) {
@@ -453,7 +452,7 @@ private fun LocationMapBackground(
 ) {
     val isPreview = LocalInspectionMode.current
     val hasMapsApiKey = BuildConfig.MAPS_API_KEY.isNotBlank()
-    val shouldRenderLiveMap = showLocationMap && !TestRuntime.isUiTestMode && !isPreview && hasMapsApiKey
+    val shouldRenderLiveMap = showLocationMap && !isPreview && hasMapsApiKey
 
     if (!shouldRenderLiveMap) {
         LocationMapPlaceholder()

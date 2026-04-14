@@ -15,7 +15,6 @@ import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -46,10 +45,9 @@ class WeatherViewModelTest {
 
         advanceUntilIdle()
 
-        val uiState = viewModel.uiState.value
-        assertFalse(uiState.isInitialLoading)
-        assertNotNull(uiState.weather)
-        assertEquals("Nuuk, GL", uiState.weather?.title)
+        val uiState = viewModel.uiState.value as WeatherUiState.Content
+        assertFalse(uiState.isRefreshing)
+        assertEquals("Nuuk, GL", uiState.weather.title)
         assertEquals(1, repository.requestCount)
     }
 
@@ -77,15 +75,15 @@ class WeatherViewModelTest {
 
         viewModel.onAction(WeatherUiAction.RefreshClicked)
 
-        val loadingState = viewModel.uiState.value
+        val loadingState = viewModel.uiState.value as WeatherUiState.Content
         assertTrue(loadingState.isRefreshing)
-        assertEquals("Nuuk, GL", loadingState.weather?.title)
+        assertEquals("Nuuk, GL", loadingState.weather.title)
 
         advanceUntilIdle()
 
-        val uiState = viewModel.uiState.value
+        val uiState = viewModel.uiState.value as WeatherUiState.Content
         assertFalse(uiState.isRefreshing)
-        assertEquals("Reykjavik, IS", uiState.weather?.title)
+        assertEquals("Reykjavik, IS", uiState.weather.title)
         assertEquals(2, repository.requestCount)
     }
 
@@ -106,11 +104,10 @@ class WeatherViewModelTest {
 
         advanceUntilIdle()
 
-        val uiState = viewModel.uiState.value
-        assertTrue(uiState.showBlockingError)
+        val uiState = viewModel.uiState.value as WeatherUiState.Error
         assertEquals(
             "We couldn't reach the weather service. Please try again.",
-            uiState.errorMessage,
+            uiState.message,
         )
     }
 
@@ -139,13 +136,13 @@ class WeatherViewModelTest {
         viewModel.onAction(WeatherUiAction.RefreshClicked)
         advanceUntilIdle()
 
-        val uiState = viewModel.uiState.value
-        assertEquals("Nuuk, GL", uiState.weather?.title)
+        val uiState = viewModel.uiState.value as WeatherUiState.Content
+        assertEquals("Nuuk, GL", uiState.weather.title)
         assertEquals(
             "We couldn't reach the weather service. Please try again.",
-            uiState.errorMessage,
+            uiState.recoverableErrorMessage,
         )
-        assertFalse(uiState.showBlockingError)
+        assertFalse(uiState.isRefreshing)
     }
 
     @Test
@@ -174,8 +171,9 @@ class WeatherViewModelTest {
         responseGate.complete(Unit)
         advanceUntilIdle()
 
+        val uiState = viewModel.uiState.value as WeatherUiState.Content
         assertEquals(1, repository.requestCount)
-        assertEquals("Nuuk, GL", viewModel.uiState.value.weather?.title)
+        assertEquals("Nuuk, GL", uiState.weather.title)
     }
 
     private class TestAppDispatchers(

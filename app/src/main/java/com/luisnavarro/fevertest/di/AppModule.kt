@@ -9,6 +9,7 @@ import com.luisnavarro.fevertest.data.location.RandomLocationGenerator
 import com.luisnavarro.fevertest.data.weather.DefaultWeatherRepository
 import com.luisnavarro.fevertest.data.weather.WeatherRepository
 import com.luisnavarro.fevertest.data.weather.remote.OpenWeatherApi
+import com.luisnavarro.fevertest.feature.weather.WeatherFeatureConfig
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -56,17 +57,19 @@ object AppModule {
         retrofit.create(OpenWeatherApi::class.java)
 
     @Provides
-    @Singleton
     @Named("openWeatherApiKey")
     fun provideOpenWeatherApiKey(): String = BuildConfig.OPEN_WEATHER_API_KEY
 
     @Provides
-    @Singleton
     fun provideRandomLocationGenerator(): RandomLocationGenerator = DefaultRandomLocationGenerator()
 
     @Provides
-    @Singleton
     fun provideAppDispatchers(): AppDispatchers = DefaultAppDispatchers
+
+    @Provides
+    fun provideWeatherFeatureConfig(): WeatherFeatureConfig = WeatherFeatureConfig(
+        showLocationMap = BuildConfig.MAPS_API_KEY.isNotBlank(),
+    )
 }
 
 @Module
@@ -74,7 +77,6 @@ object AppModule {
 abstract class AppBindingsModule {
 
     @Binds
-    @Singleton
     abstract fun bindWeatherRepository(
         implementation: DefaultWeatherRepository,
     ): WeatherRepository

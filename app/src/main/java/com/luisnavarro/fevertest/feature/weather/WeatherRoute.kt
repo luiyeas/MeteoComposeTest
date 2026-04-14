@@ -7,6 +7,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun WeatherRoute(
+    showLocationMap: Boolean,
     modifier: Modifier = Modifier,
     viewModel: WeatherViewModel = hiltViewModel(),
 ) {
@@ -15,6 +16,7 @@ fun WeatherRoute(
     WeatherScreen(
         uiState = uiState.value,
         onAction = viewModel::onAction,
+        showLocationMap = showLocationMap,
         modifier = modifier,
     )
 }

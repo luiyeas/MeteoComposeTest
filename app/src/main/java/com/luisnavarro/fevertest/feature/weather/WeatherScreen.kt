@@ -26,20 +26,24 @@ fun WeatherScreen(
     showLocationMap: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
+    val isFabLoading = when (uiState) {
+        WeatherUiState.Loading -> true
+        is WeatherUiState.Content -> uiState.isRefreshing
+        is WeatherUiState.Error -> false
+    }
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
         floatingActionButton = {
             RefreshActionButton(
-                isLoading = uiState.isInitialLoading || uiState.isRefreshing,
+                isLoading = isFabLoading,
                 onClick = {
-                    onAction(
-                        if (uiState.weather == null) {
-                            WeatherUiAction.RetryClicked
-                        } else {
-                            WeatherUiAction.RefreshClicked
-                        }
-                    )
+                    when (uiState) {
+                        WeatherUiState.Loading -> Unit
+                        is WeatherUiState.Content -> onAction(WeatherUiAction.RefreshClicked)
+                        is WeatherUiState.Error -> onAction(WeatherUiAction.RetryClicked)
+                    }
                 },
             )
         },
@@ -51,21 +55,21 @@ fun WeatherScreen(
         ) {
             WeatherTopBar()
 
-            when {
-                uiState.isInitialLoading && uiState.weather == null -> LoadingContent(
+            when (uiState) {
+                WeatherUiState.Loading -> LoadingContent(
                     modifier = Modifier.weight(1f),
                 )
 
-                uiState.showBlockingError -> BlockingErrorContent(
-                    message = uiState.errorMessage.orEmpty(),
+                is WeatherUiState.Error -> BlockingErrorContent(
+                    message = uiState.message,
                     onRetry = { onAction(WeatherUiAction.RetryClicked) },
                     modifier = Modifier.weight(1f),
                 )
 
-                uiState.weather != null -> WeatherContent(
+                is WeatherUiState.Content -> WeatherContent(
                     weather = uiState.weather,
                     isRefreshing = uiState.isRefreshing,
-                    errorMessage = uiState.errorMessage,
+                    errorMessage = uiState.recoverableErrorMessage,
                     showLocationMap = showLocationMap,
                     modifier = Modifier.weight(1f),
                 )

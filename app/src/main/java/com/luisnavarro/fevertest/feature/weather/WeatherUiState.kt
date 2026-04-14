@@ -1,11 +1,15 @@
 package com.luisnavarro.fevertest.feature.weather
 
-data class WeatherUiState(
-    val isInitialLoading: Boolean = false,
-    val isRefreshing: Boolean = false,
-    val weather: WeatherUiModel? = null,
-    val errorMessage: String? = null,
-) {
-    val showBlockingError: Boolean
-        get() = weather == null && !errorMessage.isNullOrBlank() && !isInitialLoading
+sealed interface WeatherUiState {
+    data object Loading : WeatherUiState
+
+    data class Error(
+        val message: String,
+    ) : WeatherUiState
+
+    data class Content(
+        val weather: WeatherUiModel,
+        val isRefreshing: Boolean = false,
+        val recoverableErrorMessage: String? = null,
+    ) : WeatherUiState
 }

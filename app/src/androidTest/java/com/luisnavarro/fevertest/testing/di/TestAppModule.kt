@@ -5,6 +5,7 @@ import com.luisnavarro.fevertest.data.location.RandomLocationGenerator
 import com.luisnavarro.fevertest.data.weather.WeatherRepository
 import com.luisnavarro.fevertest.di.AppBindingsModule
 import com.luisnavarro.fevertest.di.AppModule
+import com.luisnavarro.fevertest.feature.weather.WeatherFeatureConfig
 import com.luisnavarro.fevertest.testing.fakes.FakeRandomLocationGenerator
 import com.luisnavarro.fevertest.testing.fakes.FakeWeatherRepository
 import dagger.Module
@@ -34,4 +35,9 @@ object TestAppModule {
     fun provideAppDispatchers(): AppDispatchers = object : AppDispatchers {
         override val io = Dispatchers.Main.immediate
     }
+
+    @Provides
+    fun provideWeatherFeatureConfig(): WeatherFeatureConfig = WeatherFeatureConfig(
+        showLocationMap = false,
+    )
 }

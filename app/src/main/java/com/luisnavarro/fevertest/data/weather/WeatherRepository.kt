@@ -6,7 +6,6 @@ import com.luisnavarro.fevertest.data.weather.remote.OpenWeatherApi
 import com.luisnavarro.fevertest.data.weather.remote.model.OpenWeatherResponse
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 import kotlin.math.roundToInt
 
 interface WeatherRepository {
@@ -17,7 +16,6 @@ internal class MalformedWeatherPayloadException(
     message: String,
 ) : IllegalStateException(message)
 
-@Singleton
 class DefaultWeatherRepository @Inject constructor(
     private val api: OpenWeatherApi,
     @param:Named("openWeatherApiKey")

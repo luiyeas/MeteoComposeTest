@@ -25,7 +25,7 @@ class WeatherScreenTest {
         composeRule.setContent {
             FeverTestTheme {
                 WeatherScreen(
-                    uiState = WeatherUiState(isInitialLoading = true),
+                    uiState = WeatherUiState.Loading,
                     onAction = {},
                     showLocationMap = false,
                 )
@@ -44,7 +44,7 @@ class WeatherScreenTest {
         composeRule.setContent {
             FeverTestTheme {
                 WeatherScreen(
-                    uiState = WeatherUiState(errorMessage = "Weather service unavailable"),
+                    uiState = WeatherUiState.Error(message = "Weather service unavailable"),
                     onAction = { capturedAction = it },
                     showLocationMap = false,
                 )
@@ -64,9 +64,9 @@ class WeatherScreenTest {
         composeRule.setContent {
             FeverTestTheme {
                 WeatherScreen(
-                    uiState = WeatherUiState(
+                    uiState = WeatherUiState.Content(
                         weather = sampleWeatherUiModel(),
-                        errorMessage = "Showing the last successful result.",
+                        recoverableErrorMessage = "Showing the last successful result.",
                     ),
                     onAction = { capturedAction = it },
                     showLocationMap = false,

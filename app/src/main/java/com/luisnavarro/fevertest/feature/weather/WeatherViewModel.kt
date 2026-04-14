@@ -25,7 +25,7 @@ class WeatherViewModel @Inject constructor(
     private val dispatchers: AppDispatchers,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(WeatherUiState(isInitialLoading = true))
+    private val _uiState = MutableStateFlow<WeatherUiState>(WeatherUiState.Loading)
     val uiState: StateFlow<WeatherUiState> = _uiState.asStateFlow()
 
     private var loadJob: Job? = null
@@ -45,13 +45,12 @@ class WeatherViewModel @Inject constructor(
     private fun loadWeather() {
         if (loadJob?.isActive == true) return
 
-        val hasExistingContent = _uiState.value.weather != null
-        _uiState.update { currentState ->
-            currentState.copy(
-                isInitialLoading = !hasExistingContent,
-                isRefreshing = hasExistingContent,
-                errorMessage = null,
-            )
+        val previousContent = _uiState.value as? WeatherUiState.Content
+        _uiState.update {
+            previousContent?.copy(
+                isRefreshing = true,
+                recoverableErrorMessage = null,
+            ) ?: WeatherUiState.Loading
         }
 
         loadJob = viewModelScope.launch {
@@ -63,19 +62,16 @@ class WeatherViewModel @Inject constructor(
             }
 
             result.onSuccess { weather ->
-                _uiState.value = WeatherUiState(
-                    isInitialLoading = false,
-                    isRefreshing = false,
+                _uiState.value = WeatherUiState.Content(
                     weather = weather,
                 )
             }.onFailure { throwable ->
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        isInitialLoading = false,
-                        isRefreshing = false,
-                        errorMessage = throwable.toUserMessage(),
-                    )
-                }
+                _uiState.value = previousContent?.copy(
+                    isRefreshing = false,
+                    recoverableErrorMessage = throwable.toUserMessage(),
+                ) ?: WeatherUiState.Error(
+                    message = throwable.toUserMessage(),
+                )
             }
         }.also { job ->
             job.invokeOnCompletion { loadJob = null }

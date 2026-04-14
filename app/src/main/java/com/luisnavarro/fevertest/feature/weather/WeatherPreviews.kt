@@ -15,7 +15,7 @@ import com.luisnavarro.fevertest.ui.theme.FeverTestTheme
 private fun WeatherScreenLightPreview() {
     FeverTestTheme(darkTheme = false) {
         WeatherScreen(
-            uiState = WeatherUiState(weather = previewWeatherUiModel()),
+            uiState = WeatherUiState.Content(weather = previewWeatherUiModel()),
             onAction = {},
         )
     }
@@ -26,7 +26,7 @@ private fun WeatherScreenLightPreview() {
 private fun WeatherScreenDarkPreview() {
     FeverTestTheme(darkTheme = true) {
         WeatherScreen(
-            uiState = WeatherUiState(weather = previewWeatherUiModel()),
+            uiState = WeatherUiState.Content(weather = previewWeatherUiModel()),
             onAction = {},
         )
     }

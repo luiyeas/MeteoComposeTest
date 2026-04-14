@@ -71,6 +71,7 @@ For this repository, use Hilt as the default dependency injection framework. Kee
 - UI sends actions upward; the `ViewModel` reduces state and coordinates work.
 - Keep screen composables thin and child composables stateless where possible.
 - Never pass a `ViewModel` into reusable child composables.
+- Activities should act as app shells or navigation hosts only. Do not wire feature dependencies, feature state, or screen business logic in `MainActivity` unless the activity is itself the screen controller.
 
 Preferred screen split:
 
@@ -81,6 +82,14 @@ Preferred screen split:
 
 For a very small feature, files can be combined if readability improves and responsibilities remain clear.
 
+#### UI state modeling rules
+
+- Avoid boolean-heavy `UiState` models that allow illegal or contradictory combinations.
+- If loading, content, and error states are mutually exclusive, prefer a sealed render state or a similarly explicit model.
+- Do not encode blocking-vs-inline error behavior through ad-hoc nullable field combinations when an explicit state model would be clearer.
+- Keep user-facing copy out of the `ViewModel` when possible. Prefer error types, identifiers, or explicit presentation models that the UI can translate into strings.
+- Use plain UI state holder classes for reusable UI component logic instead of introducing screen `ViewModel` dependencies.
+
 ### Data layer
 
 - UI must not talk directly to Retrofit services, randomness utilities, or raw data sources.
@@ -89,6 +98,8 @@ For a very small feature, files can be combined if readability improves and resp
 - Keep mapping explicit and easy to test.
 - Treat random coordinate generation as business logic, not UI logic.
 - The coordinate generator must produce valid latitude and longitude values and should be independently testable.
+- Repositories should primarily coordinate data sources and expose app-facing models. When transport mapping, payload repair, error shaping, and policy decisions accumulate in one repository, split responsibilities into clearer collaborators such as remote data sources, mappers, or use cases.
+- Do not put presentation formatting or user-facing strings in repositories.
 
 ### Dependency injection
 
@@ -97,6 +108,9 @@ For a very small feature, files can be combined if readability improves and resp
 - Use Hilt modules only for bindings, Retrofit/OkHttp provisioning, dispatchers, API keys, and framework-provided objects.
 - Do not manually instantiate repositories, Retrofit services, or `ViewModel` instances inside activities or composables.
 - In Compose, obtain screen-level `ViewModel` instances with Hilt-aware APIs at the route level only.
+- Default to unscoped bindings unless a shared lifetime is actually required.
+- Scope a dependency only if it is expensive to create, holds shared mutable state, or must live as long as its DI container.
+- Do not annotate simple value providers, pure factories, generators, or stateless helpers as `@Singleton` by default. Every scope should be easy to justify in review.
 
 ### Performance and scalability
 
@@ -178,6 +192,9 @@ Add these only for the most critical user-facing flows if time allows, for examp
 - Inject dispatchers instead of hardcoding them.
 - Keep tests fast, deterministic, and isolated.
 - Avoid relying on real network calls in automated tests.
+- Do not add test-only runtime flags, system-property switches, or production branching whose only purpose is to support tests.
+- Prefer test-only Hilt modules, fake bindings, or injected abstractions from `test` / `androidTest` sources instead.
+- For UI tests, replace dependencies at the boundary; do not alter production behavior from the test runner.
 
 Do not mark the task as finished if the main behavior is untested without a documented reason.
 
@@ -190,6 +207,7 @@ Before finishing any task:
 3. Run broader checks if the change touches integration or Android-specific behavior.
 4. Review the diff for unnecessary complexity, dead code, and naming issues.
 5. Update `README` when assumptions, setup, or trade-offs changed.
+6. Run a final polish pass focused on reviewer-facing details: unused controls, misleading affordances, naming consistency, dead code, preview realism, and test-only leftovers.
 
 Preferred commands from the repository root:
 
@@ -244,3 +262,7 @@ Pull requests or final submissions should clearly state:
 - introducing multi-module structure without a concrete need
 - adding large libraries that do not materially improve the solution
 - leaving key logic untested
+- modeling exclusive screen states with loosely related booleans and nullable payloads when a clearer state model is available
+- over-scoping Hilt dependencies just because they live in `SingletonComponent`
+- mixing test-only logic into production code paths
+- shipping interactive-looking UI elements with no behavior
