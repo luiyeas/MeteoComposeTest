@@ -10,7 +10,6 @@ Proposed solution for the Android Developer technical assessment at Fever.
 - [Quick Access](#quick-access)
 - [Overview](#overview)
 - [Screenshots](#screenshots)
-- [APK](#apk)
 - [Technical Stack](#technical-stack)
 - [Architecture](#architecture)
 - [Project Structure](#project-structure)
@@ -27,11 +26,9 @@ Build a single-screen Android app that generates a valid random latitude and lon
 
 ## Quick Access
 
-- APK: [artifacts/app-debug.apk](artifacts/app-debug.apk)
 - Screenshots: [documentation/screenshots](documentation/screenshots)
 - Source build requires `OPEN_WEATHER_API_KEY`.
 - `MAPS_API_KEY` is intentionally not committed. When it is missing, the location card falls back to a visual placeholder instead of a live map.
-- The included debug APK was generated to let reviewers validate the complete experience without local key setup.
 
 ## Overview
 
@@ -56,18 +53,6 @@ This implementation provides:
 | Light mode | Dark mode | Landscape |
 | --- | --- | --- |
 | ![Light mode](documentation/screenshots/Screenshot_20260313_110855.png) | ![Dark mode](documentation/screenshots/Screenshot_20260313_110759.png) | ![Landscape](documentation/screenshots/Screenshot_20260313_110930.png) |
-
-## APK
-
-The repository includes a ready-to-install debug build at [artifacts/app-debug.apk](artifacts/app-debug.apk).
-
-Install it with:
-
-```bash
-adb install -r artifacts/app-debug.apk
-```
-
-This path is useful for reviewers because the repository does not include the Google Maps API key. The APK allows the full app flow, including the live location map, to be reviewed without editing `local.properties`.
 
 ## Technical Stack
 
@@ -104,7 +89,7 @@ Key decisions:
 
 ```text
 app/src/main/java/com/luisnavarro/fevertest/
-  core/              # shared models, dispatchers, test runtime flags
+  core/              # shared models and dispatchers
   data/              # random location generation, repository, Retrofit API, remote DTOs
   di/                # Hilt modules and bindings
   feature/weather/   # route, screen, components, previews, state, actions, ViewModel
@@ -112,7 +97,6 @@ app/src/main/java/com/luisnavarro/fevertest/
 app/src/test/        # unit tests
 app/src/androidTest/ # Compose UI and integration tests
 documentation/       # challenge instructions and screenshots
-artifacts/           # installable APK
 ```
 
 ## Setup / Configuration
@@ -209,7 +193,7 @@ For stability, UI tests force the map card to use its placeholder instead of a l
 - add explicit OkHttp timeouts and retry policy decisions
 - map country codes to localized country names
 - expand instrumentation coverage for additional failure flows
-- produce a signed release artifact instead of a debug APK
+- prepare a signed release build for distribution
 
 ## AI Usage
 

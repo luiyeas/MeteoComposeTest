@@ -10,7 +10,6 @@ Solución propuesta para la prueba técnica del puesto de Android Developer en F
 - [Acceso Rápido](#acceso-rápido)
 - [Resumen](#resumen)
 - [Capturas](#capturas)
-- [APK](#apk)
 - [Stack Técnico](#stack-técnico)
 - [Arquitectura](#arquitectura)
 - [Estructura del Proyecto](#estructura-del-proyecto)
@@ -27,11 +26,9 @@ Construir una aplicación Android de una sola pantalla que genere una latitud y 
 
 ## Acceso Rápido
 
-- APK: [artifacts/app-debug.apk](artifacts/app-debug.apk)
 - Capturas: [documentation/screenshots](documentation/screenshots)
 - La compilación desde código fuente requiere `OPEN_WEATHER_API_KEY`.
 - `MAPS_API_KEY` no se incluye en el repositorio de forma intencionada. Si falta, la tarjeta de localización muestra un placeholder visual en lugar de un mapa real.
-- El APK debug incluido permite revisar la experiencia completa sin necesidad de configurar claves localmente.
 
 ## Resumen
 
@@ -56,18 +53,6 @@ Esta implementación ofrece:
 | Light mode | Dark mode | Landscape |
 | --- | --- | --- |
 | ![Light mode](documentation/screenshots/Screenshot_20260313_110855.png) | ![Dark mode](documentation/screenshots/Screenshot_20260313_110759.png) | ![Landscape](documentation/screenshots/Screenshot_20260313_110930.png) |
-
-## APK
-
-El repositorio incluye una build debug lista para instalar en [artifacts/app-debug.apk](artifacts/app-debug.apk).
-
-Instalación:
-
-```bash
-adb install -r artifacts/app-debug.apk
-```
-
-Esto facilita la revisión porque el repositorio no incluye la Google Maps API key. El APK permite validar el flujo completo, incluido el mapa real de la tarjeta, sin editar `local.properties`.
 
 ## Stack Técnico
 
@@ -104,7 +89,7 @@ Decisiones principales:
 
 ```text
 app/src/main/java/com/luisnavarro/fevertest/
-  core/              # modelos compartidos, dispatchers y flags de test
+  core/              # modelos compartidos y dispatchers
   data/              # generador aleatorio, repositorio, Retrofit API y DTOs remotos
   di/                # módulos y bindings de Hilt
   feature/weather/   # route, screen, components, previews, state, actions y ViewModel
@@ -112,7 +97,6 @@ app/src/main/java/com/luisnavarro/fevertest/
 app/src/test/        # unit tests
 app/src/androidTest/ # UI tests e integration tests
 documentation/       # instrucciones del challenge y capturas
-artifacts/           # APK instalable
 ```
 
 ## Configuración
@@ -209,7 +193,7 @@ Por estabilidad, los tests de UI fuerzan el uso del placeholder en la tarjeta en
 - añadir timeouts explícitos en OkHttp y documentar la política de reintentos
 - mapear códigos de país a nombres localizados
 - ampliar la cobertura instrumentada para más flujos de error
-- generar un artefacto release firmado en lugar de un APK debug
+- preparar una build release firmada para distribución
 
 ## Uso de IA
 
